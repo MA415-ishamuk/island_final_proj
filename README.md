@@ -12,18 +12,18 @@ Use the information and data you have collected to produce a website using Shiny
 
 3. At a minimum, your site should include:
    
-  *Maps -- Where is your island in the world? What other land masses are near your island?
+  * Maps -- Where is your island in the world? What other land masses are near your island?
   
-  *Statistical tables and plots -- Show and explain the data you have collected.  
+  * Statistical tables and plots -- Show and explain the data you have collected.  
   
-   **Use plots to support your explanations and interpretations. Explore types of plots and plot features. Be sure to label your axes appropriately. Include titles, captions, and legends. Use themes to maintain consistency in your presentation.
+    * Use plots to support your explanations and interpretations. Explore types of plots and plot features. Be sure to label your axes appropriately. Include titles, captions, and legends. Use themes to maintain consistency in your presentation.
   
-  **Tables
+    * Tables
   
-  *Images -- what does your island look like?  
+  * Images -- what does your island look like?  
   
-  *Text -- Use document structure to report a story about your island in just a few sentences.
+  * Text -- Use document structure to report a story about your island in just a few sentences.
   
-  *Creative exploration -- try new features from Shiny-related packages. You don't need to invent it all yourself. See https://shiny.posit.co/r/gallery/ for ideas.
+  * Creative exploration -- try new features from Shiny-related packages. You don't need to invent it all yourself. See https://shiny.posit.co/r/gallery/ for ideas.
 
 5. When you complete your project, publish it on http://shinyapps.io. Submit both the URL for your Island Project Github repo and the URL for your published project on shinyapps.io.
