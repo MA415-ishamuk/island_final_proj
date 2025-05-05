@@ -115,21 +115,36 @@ ui <- navbarPage(
                               is traditionally divided into 18 official ethnic groups, each with distinct customs, dialects, and 
                               histories. The Merina, who inhabit the central highlands around Antananarivo, are the largest group 
                               and were historically dominant during the Malagasy kingdom. Other major groups include the Betsimisaraka 
-                              along the east coast, the Sakalava in the west, and the Antandroy in the arid south. Genetic and linguistic 
+                              along the east coast, the Sakalava in the west, and the Antandroy in the south. Genetic and linguistic 
                               evidence shows that Madagascar was first settled around 1,500 years ago by seafarers from Southeast Asia, 
                               likely from present-day Indonesia or Borneo, who later mixed with Bantu-speaking peoples from East Africa. 
                               Over time, Arab, Indian, European, and Comorian influences also left their mark, particularly in coastal 
-                              trade hubs. This rich tapestry of origins has created a diverse yet deeply interconnected Malagasy identity, 
+                              trade hubs. Thi has created a diverse yet deeply interconnected Malagasy identity, 
                               reflected in the island’s languages, beliefs, and social structures."),
                             p("Madagascar's religious landscape is built on the cultural and ethnic diversity of its people. 
                             The population practices a wide range of faiths primarily Christianity, traditional beliefs, and Islam. Fomba Gasy
                             is one of the traditional Malagasy religions and has primarily been passed down orally telling the stort of the 
                             creator deity named Zanagary and how Heaven and Earth is divided between him and his son Andrianerinerina.
                             The pie chart below illustrates the religious composition of the island as of 2020, highlighting the major faith 
-                            groups and the extent of religious diversity across the Malagasy population.")
-                          ),
-                          plotlyOutput("religion_chart")
+                            groups and the extent of religious diversity across the Malagasy population."),
+                            div(
+                              style = "background-color: #dfe8d8; border: 3px solid #444; border-radius: 10px; padding: 10px; margin-top: 20px;",
+                              plotlyOutput("religion_chart")
+                            )
+                          )
                         )
+                      ),
+                      # second box: population 
+                      div(
+                        style = "border: 4px solid #444; background-color: #dfe8d8; padding: 15px; border-radius: 8px;",
+                        h3("Population"),
+                        p("The population of Madagascar has experienced steady and significant growth over the past six decades. In 1960, the 
+                          population was just over 5 million, but by 2023 it had surpassed 30 million. This sixfold increase reflects broader 
+                          demographic trends across many developing nations, driven by improved healthcare, decreasing infant mortality rates (seen below), 
+                          and urban expansion. Interestingly, this population growth is being seen even with decreasing birth rates within the island. The consistent 
+                          upward trajectory shown in the graph highlights the country’s rapid population growth, which has implications
+                          for infrastructure, education, healthcare, and environmental sustainability."),
+                        plotlyOutput("population_chart")
                       )
                     )
                       
@@ -169,15 +184,43 @@ server <- function(input, output) {
         popup = "Antananarivo (Capital)"
       )
   })
-  
+
+  # plot an interactive pie chart that shows the religion breakdown of Madagascar
   output$religion_chart <- renderPlotly({
-    plot_ly(mdg_religion, labels = ~Religion, values = ~`Madagascar[x]`, type = 'pie',
-            textposition = 'outside',textinfo = 'label+percent') %>%
+    pastel_colors <- c(
+      "#A7ABDE", "#FFB347", "#B0E0E6", "#FF6961", "#CBAACB", "#FDFD96",
+      "#FAF8F6", "#FFD1DC", "#CFCFC4", "#F49AC2"
+    )
+    mdg_religion <- mdg_religion %>%
+      mutate(Label = paste0(Religion, ": ", `Madagascar[x]`, "%"))
+
+    plot_ly(mdg_religion,
+            labels = ~Religion,
+            values = ~`Madagascar[x]`,
+            type = 'pie',
+            text = ~Label,
+            textinfo = 'text',
+            textposition = 'outside',
+            insidetextorientation = 'radial',
+            pull = 0.01, 
+            marker = list(colors = pastel_colors),
+            hovertemplate = '%{label}: %{percent}<extra></extra>') %>%
       layout(title = 'Madagascar Religion Breakdown',
-             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+             showlegend = T,
+             paper_bgcolor = '#dfe8d8', 
+             plot_bgcolor = '#dfe8d8')
   })
   
+  output$population_chart <- renderPlotly({
+    plot_ly(mdg_pop, x = ~Year, y = ~Value, type = 'scatter', mode = 'lines+markers',
+            line = list(color = 'forestgreen', width = 3),
+            marker = list(size = 5)) %>%
+      layout(title = "Population of Madagascar Per Year",
+             xaxis = list(title = "Year"),
+             yaxis = list(title = "Population (in Millions)"),
+             plot_bgcolor = "#dfe8d8",
+             paper_bgcolor = "#dfe8d8")
+  })
 }
 
 # Run the application 

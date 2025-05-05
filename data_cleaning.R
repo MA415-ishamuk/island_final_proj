@@ -1,6 +1,7 @@
 library(tidyr)
 library(dplyr)
 library(stringr)
+library(tidyverse)
 
 # data cleaning
 # read in dataset - Health Indicators of Madagascar
