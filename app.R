@@ -15,6 +15,7 @@ library(slickR)
 library(tidyr)
 library(dplyr)
 library(stringr)
+library(rsconnect)
 
 # data cleaning
 # read in dataset - Health Indicators of Madagascar
