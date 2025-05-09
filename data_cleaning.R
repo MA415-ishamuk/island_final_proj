@@ -57,8 +57,10 @@ mdg_life_ex <- mdg_life_ex |> separate_wider_delim(cols = `Gender`,
 mdg_life_ex <- mdg_life_ex |> select(-rem, -remove)
 
 # pivot the table wider so that each classification (female/male/total) has its own column
-mdg_life_ex <- pivot_wider(mdg_life_ex, names_from = Gender, values_from = Value)
-mdg_life_ex <- mdg_life_ex[-65, ]
+#mdg_life_ex <- pivot_wider(mdg_life_ex, names_from = Gender, values_from = Value)
+mdg_life_ex <- mdg_life_ex[-65,]
+mdg_life_ex <- mdg_life_ex[-130,]
+mdg_life_ex <- mdg_life_ex[-195,]
 
 ###  create a separate table with just infant mortality rate information
 mdg_inf_mort <- mdg_long %>%
@@ -95,11 +97,11 @@ mdg_inf_mort <- mdg_inf_mort |> separate_wider_delim(cols = `Gender`,
 mdg_inf_mort <- mdg_inf_mort |> select(-rem, -remove, -remove2)
 
 # pivot the table wider so that each classification (female/male/total) has its own column
-mdg_inf_mort <- pivot_wider(mdg_inf_mort, names_from = Gender, values_from = Value)
+#mdg_inf_mort <- pivot_wider(mdg_inf_mort, names_from = Gender, values_from = Value)
 
 # remove rows where all columns are NA
 mdg_inf_mort <- mdg_inf_mort %>%
-  filter(!is.na(total) & !is.na(female) & !is.na(male))
+  filter(!is.na(Value))
 
 # read in dataset - Religions of Madagascar
 mdg_religion <- read_csv("mdg_religion.csv", 
@@ -116,3 +118,49 @@ mdg_religion <- mdg_religion[-7, ]
 
 # make the percents in the Madagascar column numerical (to translate to the pie chart)
 mdg_religion$`Madagascar[x]` <- as.numeric(gsub("%", "", mdg_religion$`Madagascar[x]`))
+
+### create a table with the top 10 exports (in terms of trade value) in Madagascar
+mdg_exports <- read_csv("mdg_exports.csv", 
+                        col_names = TRUE,
+                        show_col_types = FALSE)
+
+# remove columns with unnecessary information
+mdg_exports <- mdg_exports |> select(-HS2, -`HS2 ID`, -`HS4 ID`, -`Section ID`, -Year)
+
+# reorder the table in decreasing order by trade value (to determine top 10 exports)
+mdg_exports_10 <- mdg_exports %>%
+  arrange(desc(`Trade Value`))
+
+# rename data table columns for clarity 
+mdg_exports_10 <- mdg_exports_10 %>%
+  rename(Item = HS4)
+mdg_exports_10 <- mdg_exports_10 %>%
+  rename(Sector = Section)
+
+# keep only the top 10 exports 
+mdg_exports_10 <- mdg_exports_10[1:10,]
+
+### create a separate table with just GDP (in $ USD) information
+mdg_gdp <- mdg_long %>%
+  filter(`Indicator Name` == "GDP (current US$)")
+
+# remove unnecessary column Indicator Name and row 65 with an NA value
+mdg_gdp <- mdg_gdp |> select(-`Indicator Name`)
+mdg_gdp <- mdg_gdp[-65,]
+
+### create a plot looking at how tree cover loss has changes over years
+mdg_tree_loss <- read_csv("mdg_tree_loss.csv", 
+                        col_names = TRUE,
+                        show_col_types = FALSE)
+
+# remove the first column that has only one value 
+mdg_tree_loss <- mdg_tree_loss |> drop_one_value_col()
+
+# rename data table columns for clarity
+mdg_tree_loss <- mdg_tree_loss %>%
+  rename(Year = umd_tree_cover_loss__year)
+mdg_tree_loss <- mdg_tree_loss %>%
+  rename(`Tree Cover Loss` = umd_tree_cover_loss__ha)
+mdg_tree_loss <- mdg_tree_loss %>%
+  rename(`CO2 Emissions` = gfw_gross_emissions_co2e_all_gases__Mg)
+
